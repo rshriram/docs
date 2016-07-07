@@ -1,1 +1,1 @@
-# Amalgam8 Documentation
+use gh-pages branch
