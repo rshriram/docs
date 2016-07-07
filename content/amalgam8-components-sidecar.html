@@ -46,7 +46,7 @@
     <body>
         
         
-    <div class="book" data-level="2.2" data-chapter-title="Amalgam8 Sidecar" data-filepath="content/amalgam8-components-sidecar.md" data-basepath=".." data-revision="Wed Jul 06 2016 22:53:04 GMT-0400 (EDT)">
+    <div class="book" data-level="2.2" data-chapter-title="Amalgam8 Sidecar" data-filepath="content/amalgam8-components-sidecar.md" data-basepath=".." data-revision="Wed Jul 06 2016 23:19:05 GMT-0400 (EDT)">
     
 
 <div class="book-summary">
@@ -162,7 +162,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="2.2.1" data-path="content/amalgam8-components-sidecar.html">
+        <li class="chapter " data-level="2.2.1" data-path="../content/amalgam8-components-sidecar.html">
             
             <span><b>2.2.1.</b> Deployment Options</span>
             
@@ -237,7 +237,7 @@ following functional components:</p>
 <li><strong>Supervisor</strong> - Manages the lifecycle of an Amalgam8 Proxy server and optionally the associated microservice itself.</li>
 <li><strong>Proxy</strong> - An <a href="https://openresty.org/en/" target="_blank">OpenResty-based Nginx</a> server  that acts as a request forwarder and load-balancer.</li>
 </ul>
-<h3 id="deployment-options-">Deployment Options <a id="deployment-options"></a></h3>
+<h3 id="deployment-options-">Deployment Options <a id="deployment_options"></a></h3>
 <p>There are two deployment options for the
 sidecar. One option is to run it as <em>a separate process in the same
 container alongside the application</em>. This usage model applies to any
@@ -252,7 +252,7 @@ pod. Each pod would have the microservice running in one container and the
 sidecar in another. In both deployment options outlined above, the
 application would access the sidecar in the same manner, namely:
 <a href="http://localhost:6379/servicefoo/foobarapi" target="_blank">http://localhost:6379/servicefoo/foobarapi</a></p>
-<h3 id="configuration-options-">Configuration Options <a id="configuration-options"></a></h3>
+<h3 id="configuration-options-">Configuration Options <a id="configuration_options"></a></h3>
 <p>Depending on the nature of the microservice, only some
 or all of the components of the sidecar may be needed. As shown in the
 figure below, a microservice that requires service registration, makes
@@ -267,7 +267,7 @@ registry adapter for Kubernetes.  The sidecar provides various
 <a href="https://github.com/amalgam8/sidecar" target="_blank">command line flags</a> to disable
 components that are not needed.</p>
 <p><img src="figures/amalgam8-sidecar-configurations.svg" alt="sidecar containers"></p>
-<h3 id="programmable-proxy-">Programmable Proxy <a id="service-proxy"></a></h3>
+<h3 id="programmable-proxy-">Programmable Proxy <a id="programmable_proxy"></a></h3>
 <p>All calls to Amalgam8 microservices are routed via the Proxy component in
 the sidecar. The Proxy enables the Amalgam8 Controller to manage traffic
 between all the microservices in the application. Typically, the Proxy
