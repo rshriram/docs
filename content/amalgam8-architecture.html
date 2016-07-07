@@ -1,0 +1,334 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Amalgam8 Architecture | Amalgam8 Documentation</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.5.2">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="../gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+
+        
+    
+    
+    <link rel="next" href="../content/amalgam8-components-registry.html" />
+    
+    
+    <link rel="prev" href="../content/what-is-amalgam8.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book" data-level="2" data-chapter-title="Amalgam8 Architecture" data-filepath="content/amalgam8-architecture.md" data-basepath=".." data-revision="Wed Jul 06 2016 22:53:04 GMT-0400 (EDT)">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="../index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="content/what-is-amalgam8.html">
+            
+                
+                    <a href="../content/what-is-amalgam8.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        What is Amalgam8
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="2" data-path="content/amalgam8-architecture.html">
+            
+                
+                    <a href="../content/amalgam8-architecture.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Amalgam8 Architecture
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1" data-path="content/amalgam8-components-registry.html">
+            
+                
+                    <a href="../content/amalgam8-components-registry.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.1.</b>
+                        
+                        Amalgam8 Registry
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1" data-path="content/amalgam8-components-registry.html">
+            
+            <span><b>2.1.1.</b> Interoperability</span>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.1.1.1" data-path="content/amalgam8-components-registry.html">
+            
+            <span><b>2.1.1.1.</b> Kubernetes-Registry Adapter</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="content/amalgam8-components-sidecar.html">
+            
+                
+                    <a href="../content/amalgam8-components-sidecar.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.2.</b>
+                        
+                        Amalgam8 Sidecar
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="2.2.1" data-path="content/amalgam8-components-sidecar.html">
+            
+            <span><b>2.2.1.</b> Deployment Options</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2.2" data-path="content/amalgam8-components-sidecar.html">
+            
+            <span><b>2.2.2.</b> Configuration Options</span>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2.3" data-path="content/amalgam8-components-sidecar.html">
+            
+            <span><b>2.2.3.</b> Programmable Proxy</span>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../" >Amalgam8 Documentation</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="amalgam8-architecture">Amalgam8 Architecture</h2>
+<p>The Amalgam8 platform consists of the following three components:</p>
+<ol>
+<li><p><strong>Registry</strong> - A high performance multi-tenant service registry that
+provides a centralized view of all the microservices in an application,
+regardless of where they are actually running. To simplify integration
+of microservices that are already using a service registry, Amalgam8
+registry provides a plug-in point for adapters that can automatically
+pull in information from
+other service registry solutions such as Etcd (used by Kubernetes),
+Netflix Eureka, Consul, etc.</p>
+</li>
+<li><p><strong>Controller</strong> - A multi-tenant controller that monitors the registry
+and updates the sidecar configuration accordingly. It provides APIs to
+the developer for configuring request routing across different versions
+of microservices, fault injection, etc. These controller generates
+request routing rules and updates the sidecars belonging to the
+developer&apos;s application.</p>
+</li>
+<li><p><strong>Sidecar</strong> -  Each microservice in the application is paired with a
+sidecar. Conceptually, the sidecar&apos;s basic responsibility includes service
+registration (where required), service discovery and <em>client-side load-balancing</em> of
+requests across microservice instances. In addition to these basic
+responsibilities, the sidecar is responsible for essential functions
+such as version-aware routing, fault injection, ACLs, rate limiting,
+etc. From a design standpoint, the choice of technology for the sidecar
+is irrelevant. <em>Any implementation of the sidecar is sufficient (as a
+library or a helper process) as long as the sidecar performs the above
+functions and is dynamically programmable at runtime</em>.</p>
+</li>
+</ol>
+<p>Amalgam8&apos;s sidecar implementation uses OpenResty + Nginx for request
+routing, and employs a simple daemon for receiving and updating the routing
+rules in Nginx, and for service registration &amp; heartbeat (where needed).</p>
+<p>Applications run as tenants of the Registry and the Controller. They
+register their services in the Registry and use the Controller to manage
+the sidecars. The following diagram illustrates how the three components
+work together.</p>
+<p><img src="figures/how-amalgam8-works.svg" alt="how it works"></p>
+<ol>
+<li>Microservice instances are registered in the Registry. There are several
+ways this may be accomplished as described in
+<a href="#service-registration">Amalgam8 Registry</a>.</li>
+<li>The Developer uses the control plane API to configure high-level rules
+for request routing between services (e.g., splitting traffic across
+versions, injecting delays).</li>
+<li>The Controller translates these rules into low-level control information
+and sends them to the sidecars. In addition, it also sends control
+information when new information (e.g., new services, new instances)
+appears in the Registry.</li>
+<li>A microservice invokes APIs of other microservices by pointing to the
+sidecar as the destination host. For e.g., <a href="http://localhost:6379/servicefoo/foobarapi" target="_blank">http://localhost:6379/servicefoo/foobarapi</a></li>
+<li>The Nginx proxy component of the sidecar forwards the request to the
+appropriate microservice, depending on the request path and routing
+rules specified by the controller.</li>
+</ol>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="../content/what-is-amalgam8.html" class="navigation navigation-prev " aria-label="Previous page: What is Amalgam8"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="../content/amalgam8-components-registry.html" class="navigation navigation-next " aria-label="Next page: Amalgam8 Registry"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="../gitbook/app.js"></script>
+
+    
+    <script src="../gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="../gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="../gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="../gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"highlight":{},"search":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

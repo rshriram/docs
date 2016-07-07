@@ -5,9 +5,9 @@
         
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Introduction | Amalgam8 Documentation</title>
+        <title>What is Amalgam8 | Amalgam8 Documentation</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="This documentation is a work in progress. The current documentation describes Amalgam8&#39;s components at a high-level and how they integrate with a microservice-based application.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 2.5.2">
         
         
@@ -15,21 +15,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
-        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
         
-    <link rel="stylesheet" href="gitbook/style.css">
+    <link rel="stylesheet" href="../gitbook/style.css">
     
         
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
-        
-    
-        
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-highlight/website.css">
         
     
         
-        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="../gitbook/plugins/gitbook-plugin-fontsettings/website.css">
         
     
     
@@ -37,8 +37,10 @@
         
     
     
-    <link rel="next" href="./content/what-is-amalgam8.html" />
+    <link rel="next" href="../content/amalgam8-architecture.html" />
     
+    
+    <link rel="prev" href="../index.html" />
     
 
         
@@ -46,7 +48,7 @@
     <body>
         
         
-    <div class="book" data-level="0" data-chapter-title="Introduction" data-filepath="README.md" data-basepath="." data-revision="Wed Jul 06 2016 22:53:04 GMT-0400 (EDT)">
+    <div class="book" data-level="1" data-chapter-title="What is Amalgam8" data-filepath="content/what-is-amalgam8.md" data-basepath=".." data-revision="Wed Jul 06 2016 22:53:04 GMT-0400 (EDT)">
     
 
 <div class="book-summary">
@@ -61,10 +63,10 @@
 
             
     
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
-                    <a href="./index.html">
+                    <a href="../index.html">
                 
                         <i class="fa fa-check"></i>
                         
@@ -74,10 +76,10 @@
             
         </li>
     
-        <li class="chapter " data-level="1" data-path="content/what-is-amalgam8.html">
+        <li class="chapter active" data-level="1" data-path="content/what-is-amalgam8.html">
             
                 
-                    <a href="./content/what-is-amalgam8.html">
+                    <a href="../content/what-is-amalgam8.html">
                 
                         <i class="fa fa-check"></i>
                         
@@ -92,7 +94,7 @@
         <li class="chapter " data-level="2" data-path="content/amalgam8-architecture.html">
             
                 
-                    <a href="./content/amalgam8-architecture.html">
+                    <a href="../content/amalgam8-architecture.html">
                 
                         <i class="fa fa-check"></i>
                         
@@ -108,7 +110,7 @@
         <li class="chapter " data-level="2.1" data-path="content/amalgam8-components-registry.html">
             
                 
-                    <a href="./content/amalgam8-components-registry.html">
+                    <a href="../content/amalgam8-components-registry.html">
                 
                         <i class="fa fa-check"></i>
                         
@@ -149,7 +151,7 @@
         <li class="chapter " data-level="2.2" data-path="content/amalgam8-components-sidecar.html">
             
                 
-                    <a href="./content/amalgam8-components-sidecar.html">
+                    <a href="../content/amalgam8-components-sidecar.html">
                 
                         <i class="fa fa-check"></i>
                         
@@ -216,7 +218,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Amalgam8 Documentation</a>
+        <a href="../" >Amalgam8 Documentation</a>
     </h1>
 </div>
 
@@ -226,8 +228,39 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="amalgam8-documentation">Amalgam8 Documentation</h1>
-<p>This documentation is a work in progress. The current documentation describes Amalgam8&apos;s components at a high-level and how they integrate with a microservice-based application.</p>
+                        <h2 id="why-should-you-use-amalgam8">Why should you use Amalgam8</h2>
+<p>Amalgam8 is a multi-tenant platform for quickly building
+<a href="http://martinfowler.com/articles/microservices.html" target="_blank">microservice applications</a>
+and managing the DevOps lifecycle aspects of various microservices.
+Its goals are to simplify integration of polyglot microservices and help
+developers accomplish DevOps tasks such as
+<a href="https://www.optimizely.com/ab-testing/" target="_blank">A/B testing</a>,
+<a href="http://martinfowler.com/bliki/CanaryRelease.html" target="_blank">canary releases</a>,
+red/black deployments,
+<a href="https://developer.ibm.com/open/2016/06/06/systematically-resilience-testing-of-microservices-with-gremlin/" target="_blank">resilience testing</a>,
+etc.</p>
+<p>The Amalgam8 platform achieves these goals through two stages. First, a
+language-agnostic sidecar process enables developers to quickly integrate
+polyglot microservices by abstracting away service registration, discovery,
+load-balancing from the application process.</p>
+<p>Second, a centralized control plane programs the sidecars at runtime to
+control traffic across different versions of microservices
+(both edge and mid-tier), and manipulate/transform requests based on various
+rule. Using the control plane APIs, developers can
+easily perform tasks such as canary releases, red/black deployments,
+version-aware routing, A/B testing, failure recovery testing (resilience
+testing), etc.</p>
+<p><img src="figures/amalgam8-architecture.svg" alt="high-level architecture"></p>
+<p>Due to its native support for multi-tenancy, the Amalgam8 control plane can
+be easily integrated into any multi-tenant infrastructure (e.g., IBM
+Bluemix, AWS, Azure, etc.), thereby providing application developers with a
+consistent interface for building and managing their microservice
+applications across different providers.</p>
+<p>The Amalgam8 platform can run on any compute infrastructure such as
+containers, VMs or even bare metal. It easily integrates with popular
+container management solutions such as Docker Swarm, Kubernetes,
+Marathon/Mesos. In addition, it can run on various public cloud
+infrastructures such as IBM Bluemix, Google Cloud Platform, etc.</p>
 
                     
                     </section>
@@ -238,29 +271,31 @@
         </div>
 
         
+        <a href="../index.html" class="navigation navigation-prev " aria-label="Previous page: Introduction"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./content/what-is-amalgam8.html" class="navigation navigation-next navigation-unique" aria-label="Next page: What is Amalgam8"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="../content/amalgam8-architecture.html" class="navigation navigation-next " aria-label="Next page: Amalgam8 Architecture"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
 
         
-<script src="gitbook/app.js"></script>
+<script src="../gitbook/app.js"></script>
 
     
-    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
-    
-
-    
-    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
     
 
     
-    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-search/search.js"></script>
     
 
     
-    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="../gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
     
 
 <script>

@@ -1,3 +1,10 @@
-# Table of content 
-* [Getting Started](content/getting-started.md)
-* [API Reference](content/api-reference.md)
+# Table of Contents
+* [What is Amalgam8](content/what-is-amalgam8.md)
+* [Amalgam8 Architecture](content/amalgam8-architecture.md)
+  * [Amalgam8 Registry](content/amalgam8-components-registry.md)
+    * [Interoperability](content/amalgam8-components-registry.md#interoperability)
+      * [Kubernetes-Registry Adapter](content/amalgam8-components-registry.md#k8s_adapter)
+  * [Amalgam8 Sidecar](content/amalgam8-components-sidecar.md)
+    * [Deployment Options](../content/amalgam8-components-sidecar.md#deployment_options)
+    * [Configuration Options](content/amalgam8-components-sidecar.md#configuration_options)
+    * [Programmable Proxy](content/amalgam8-components-sidecar.md#programmable_proxy)
