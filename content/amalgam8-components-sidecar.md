@@ -1,4 +1,4 @@
-## Amalgam8 Sidecar
+## Amalgam8 Sidecar <a id="sidecar-root"></a>
 
 The Almagam8 sidecar has a flexible architecture that can be configured and
 used by applications in a number of ways. The sidecar can be split into the

@@ -1,4 +1,4 @@
-## Amalgam8 Registry
+## Amalgam8 Registry <a id="registry-root"></a>
 
 To integrate and use a microservice in Amalgam8, it needs to be registered
 in the Amalgam8 Registry.  The most basic way of registering, which can be

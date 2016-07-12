@@ -1,7 +1,11 @@
-1. npm install gitbook-cli --save-dev
-2. create content files under content/ folder
-3. npm run docs:watch to view the content locally (content will be served out of _book folder)
-4. npm run docs:build to build html files and copy them to main folder
-5. Commit any html files that were modified or created by the previous command
-6. push to github (gh-pages branch)
+1. npm install gitbook-cli -g
+2. gitbook update
+##The above two steps are one time setups. You should have gitbook cli 2.3.0 and gitbook 3.2.0
+##You can verify this by running gitbook -V
+## Rest of documentation is at https://github.com/GitbookIO/gitbook/blob/master/docs/setup.md
 
+3. create content files in markdown format under content/ folder. If you are creating new chapters or subsections, make sure to update SUMMARY.md
+4. Preview the content using gitbook serve (content will be served out of _book folder)
+5. Build the static web page using create-static-website.sh
+6. Commit any html files that were modified or created by the previous command, as well as the markdown files.
+7. push to github (gh-pages branch)
