@@ -4,7 +4,12 @@ Running your application on top of the Amalgam8 microservice platform
 involves two main steps: (a) setting up the control plane services
 (Amalgam8 service registry and Amalgam8 controller), and (b) using the
 Amalgam8 sidecar for communication between microservices instead of direct
-microservice-to-microservice communication
+microservice-to-microservice communication. 
+
+The control plane setup, i.e., step (a) is needed only if you are running
+Amalgam8 locally. If Amalgam8 control plane is provided as a service, you
+need to obtain the URLs and authentication tokens for the controller and
+the registry.
 
 The Amalgam8 sidecar is a lightweight agent that automates service
 registration and serves as an intelligent request router between
@@ -22,6 +27,13 @@ process alongside your microservices.
     docker run -d amalgam8/a8-registry -auth_mode=trusted
     #controller
     docker run -d amalgam8/a8-controller -poll_interval=5s
+    ```
+
+
+* Install the Amalgam8 CLI (`a8ctl`)
+
+    ```bash
+    sudo pip install git+https://github.com/amalgam8/a8ctl
     ```
 
 
@@ -148,7 +160,6 @@ version-aware routing are required.
 A8_REGISTER=true
 A8_REGISTRY_URL=http://a8registryURL
 A8_REGISTRY_TOKEN=a8registry_auth_token
-A8_SERVICE=service_name:service_version_tag
 A8_SERVICE=service_name:service_version_tag
 A8_ENDPOINT_PORT=port_where_service_is_listening
 A8_ENDPOINT_TYPE=http|https|tcp|udp|user
