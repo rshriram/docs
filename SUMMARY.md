@@ -2,6 +2,7 @@
 
 * [Introduction](README.md)
 * [What is Amalgam8](content/what-is-amalgam8.md)
+* [Getting Started with Amalgam8](content/getting-started-with-amalgam8.md)
 * [Amalgam8 Architecture](content/amalgam8-architecture.md)
     * [Amalgam8 Registry](content/amalgam8-components-registry.md#registry-root)
         * [Interoperability](content/amalgam8-components-registry.md#interoperability)
