@@ -183,6 +183,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.1.1.2" data-path="amalgam8-components-registry.html">
+            
+                <a href="amalgam8-components-registry.html#eureka">
+            
+                    
+                    Drop-in Replacement for Eureka
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -222,10 +235,10 @@
     
         <li class="chapter " data-level="1.4.2.2" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#configuration_options">
+                <a href="amalgam8-components-sidecar.html#usage">
             
                     
-                    Configuration Options
+                    Routing Requests Through the Sidecar
             
                 </a>
             
@@ -235,10 +248,10 @@
     
         <li class="chapter " data-level="1.4.2.3" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#programmable_proxy">
+                <a href="amalgam8-components-sidecar.html#runtime">
             
                     
-                    Programmable Proxy
+                    Runtime Configurations
             
                 </a>
             
@@ -301,33 +314,41 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="what-is-amalgam8">What is Amalgam8</h2><p>Amalgam8 is a multi-tenant platform for quickly building
-<a href="http://martinfowler.com/articles/microservices.html" target="_blank">microservice applications</a>
-and managing the DevOps lifecycle aspects of various microservices.
-Its goals are to simplify integration of polyglot microservices and help
-developers accomplish DevOps tasks such as
-<a href="https://www.optimizely.com/ab-testing/" target="_blank">A/B testing</a>,
+                                <h1 id="what-is-amalgam8">What is Amalgam8</h1><p>Before describing Amalgam8, it is important to understand two key concepts
+that are essential to any
+<a href="http://martinfowler.com/articles/microservices.html" target="_blank">microservice application</a>,
+namely content and version-based routing.</p><h2 id="content-and-version-based-routing---101">Content and version-based routing - 101</h2><p>In any realistic production deployment, there are typically multiple
+versions of microservices running at the same time, as you might be testing
+out a new version, troubleshooting an old version, or simply keeping the
+old version around just in case.</p><p><em>Content-based routing</em> allows you to route requests between microservices
+based on the content of the request, such as the URL, HTTP headers,
+etc. For example,</p><pre><code>from microservice A, if request has &quot;X-User-Id: QA&quot;, route to instance of
+(B:v2) else route to instance of (B:v1)</code></pre>
+<p><em>Version-based routing</em> allows you to control how different versions of
+microservices can talk to each other. For example,</p><pre><code>from microservice A:v2 route all requests to B:v2
+from microservice A:v1 route 10% of requests to B:v2 and 90% to B:v1</code></pre>
+<p><em>A simple way to accomplish these functions is to control how
+microservices can talk to each other.</em></p><h2 id="amalgam8">Amalgam8</h2><p>Amalgam8 is a platform for building polyglot microservice applications that
+enables you to route requests between microservices in a <em>content-based</em>
+and <em>version-based</em> manner, independent of the underlying container
+orchestration layer
+(<a href="https://www.docker.com/products/docker-swarm" target="_blank">Docker Swarm</a>,
+<a href="https://kubernetes.io" target="_blank">Kubernetes</a>,
+<a href="https://mesosphere.github.io/marathon/" target="_blank">Marathon</a>) or the cloud platform
+(Amazon AWS, IBM Bluemix, Google Cloud Platform, Microsoft Azure, etc.</p><p>Amalgam8 uses the sidecar model or the ambassador pattern for building
+microservices applications. The sidecar runs as in independent process and
+takes care of service registration, discovery and request routing to
+various microservices. The sidecar model simplifies development of polyglot
+applications.</p><p>Through the Amalgam8 Control Plane, you can dynamically program the
+sidecars in each microservice and control how requests are routed between
+microservices. The control plane provides REST APIs that serve as the basis
+for building tools for various DevOps tasks such as
+<a href="https://www.optimizely.com/ab-testing/" target="_blank">A/B testing</a>, internal releases
+and dark launches,
 <a href="http://martinfowler.com/bliki/CanaryRelease.html" target="_blank">canary releases</a>,
 red/black deployments,
 <a href="https://developer.ibm.com/open/2016/06/06/systematically-resilience-testing-of-microservices-with-gremlin/" target="_blank">resilience testing</a>,
-etc.</p><p>The Amalgam8 platform achieves these goals through two stages. First, a
-language-agnostic sidecar process enables developers to quickly integrate
-polyglot microservices by abstracting away service registration, discovery,
-load-balancing from the application process.</p><p>Second, a centralized control plane programs the sidecars at runtime to
-control traffic across different versions of microservices
-(both edge and mid-tier), and manipulate/transform requests based on various
-rule. Using the control plane APIs, developers can
-easily perform tasks such as canary releases, red/black deployments,
-version-aware routing, A/B testing, failure recovery testing (resilience
-testing), etc.</p><p><img alt="high-level architecture" src="figures/amalgam8-architecture.svg"></p><p>Due to its native support for multi-tenancy, the Amalgam8 control plane can
-be easily integrated into any multi-tenant infrastructure (e.g., IBM
-Bluemix, AWS, Azure, etc.), thereby providing application developers with a
-consistent interface for building and managing their microservice
-applications across different providers.</p><p>The Amalgam8 platform can run on any compute infrastructure such as
-containers, VMs or even bare metal. It easily integrates with popular
-container management solutions such as Docker Swarm, Kubernetes,
-Marathon/Mesos. In addition, it can run on various public cloud
-infrastructures such as IBM Bluemix, Google Cloud Platform, etc.</p>
+etc.</p><p><img alt="high-level architecture" src="figures/amalgam8-architecture.svg"></p>
                                 
                                 </section>
                             
@@ -370,7 +391,7 @@ infrastructures such as IBM Bluemix, Google Cloud Platform, etc.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"What is Amalgam8","level":"1.2","depth":1,"next":{"title":"Getting Started with Amalgam8","level":"1.3","depth":1,"path":"content/getting-started-with-amalgam8.md","ref":"content/getting-started-with-amalgam8.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/what-is-amalgam8.md","mtime":"2016-07-07T03:21:48.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-07-25T23:47:56.810Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"What is Amalgam8","level":"1.2","depth":1,"next":{"title":"Getting Started with Amalgam8","level":"1.3","depth":1,"path":"content/getting-started-with-amalgam8.md","ref":"content/getting-started-with-amalgam8.md","articles":[]},"previous":{"title":"Introduction","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/what-is-amalgam8.md","mtime":"2016-09-14T22:33:13.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-14T22:40:51.590Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -7,8 +7,9 @@
     * [Amalgam8 Registry](content/amalgam8-components-registry.md#registry-root)
         * [Interoperability](content/amalgam8-components-registry.md#interoperability)
             * [Kubernetes-Registry Adapter](content/amalgam8-components-registry.md#k8s_adapter)
+            * [Drop-in Replacement for Eureka](content/amalgam8-components-registry.md#eureka)
     * [Amalgam8 Sidecar](content/amalgam8-components-sidecar.md#sidecar-root)
         * [Deployment Options](content/amalgam8-components-sidecar.md#deployment_options)
-        * [Configuration Options](content/amalgam8-components-sidecar.md#configuration_options)
-        * [Programmable Proxy](content/amalgam8-components-sidecar.md#programmable_proxy)
+        * [Routing Requests Through the Sidecar](content/amalgam8-components-sidecar.md#usage)
+        * [Runtime Configurations](content/amalgam8-components-sidecar.md#runtime)
 

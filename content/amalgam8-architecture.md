@@ -1,4 +1,4 @@
-## Amalgam8 Architecture
+# Amalgam8 Architecture
 
 The Amalgam8 platform consists of the following three components:
 
@@ -9,29 +9,30 @@ The Amalgam8 platform consists of the following three components:
    registry provides a plug-in point for adapters that can automatically
    pull in information from
    other service registry solutions such as Etcd (used by Kubernetes),
-   Netflix Eureka, Consul, etc.
+   Netflix Eureka, and Spring Cloud Discovery.
 
-2. **Controller** - A multi-tenant controller that monitors the registry
-   and updates the sidecar configuration accordingly. It provides APIs to
-   the developer for configuring request routing across different versions
-   of microservices, fault injection, etc. These controller generates
-   request routing rules and updates the sidecars belonging to the
-   developer's application.
+2. **Controller** - A multi-tenant service for managing routing across
+   microservices via the sidecars. Routes programmed at the controller are
+   percolated down to the sidecars periodically. Routing rules can be based
+   on the content of the requests and the version of microservices sending
+   and receiving the requests. In addition to routing, rules can also be
+   expressed for injecting faults into microservice API calls.
 
-3. **Sidecar** -  Each microservice in the application is paired with a
-   sidecar. Conceptually, the sidecar's basic responsibility includes service
-   registration (where required), service discovery and *client-side load-balancing* of
-   requests across microservice instances. In addition to these basic
-   responsibilities, the sidecar is responsible for essential functions
-   such as version-aware routing, fault injection, ACLs, rate limiting,
-   etc. From a design standpoint, the choice of technology for the sidecar
-   is irrelevant. *Any implementation of the sidecar is sufficient (as a
-   library or a helper process) as long as the sidecar performs the above
-   functions and is dynamically programmable at runtime*.
+3. **Sidecar** - Each microservice in the application is paired with a
+   sidecar. Conceptually, the sidecar's basic responsibility includes
+   service registration (where required), service discovery and
+   *client-side load-balancing* of requests across microservice
+   instances. In addition to these basic responsibilities, the sidecar is
+   responsible for essential functions such as content and version-based
+   routing, fault injection, ACLs, rate limiting, etc. From a design
+   standpoint, the choice of technology for the sidecar is irrelevant. *Any
+   implementation of the sidecar is sufficient (as a library or a helper
+   process) as long as the sidecar performs the above functions and is
+   dynamically programmable at runtime*.
    
-Amalgam8's sidecar implementation uses OpenResty + Nginx for request
-routing, and employs a simple daemon for receiving and updating the routing
-rules in Nginx, and for service registration & heartbeat (where needed).
+   Amalgam8's sidecar implementation uses OpenResty + Nginx for request
+   routing, and employs a simple daemon for receiving and updating the routing
+   rules in Nginx, and for service registration & heartbeat (where needed).
 
 Applications run as tenants of the Registry and the Controller. They
 register their services in the Registry and use the Controller to manage
@@ -51,7 +52,7 @@ work together.
    information when new information (e.g., new services, new instances)
    appears in the Registry.
 4. A microservice invokes APIs of other microservices by pointing to the
-   sidecar as the destination host. For e.g., http://localhost:6379/servicefoo/foobarapi
+   sidecar as the destination host. For e.g., [http://localhost:6379/serviceName/apiEndpoint]()
 5. The Nginx proxy component of the sidecar forwards the request to the
    appropriate microservice, depending on the request path and routing
    rules specified by the controller.

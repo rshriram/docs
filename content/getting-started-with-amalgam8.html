@@ -183,6 +183,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.1.1.2" data-path="amalgam8-components-registry.html">
+            
+                <a href="amalgam8-components-registry.html#eureka">
+            
+                    
+                    Drop-in Replacement for Eureka
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -222,10 +235,10 @@
     
         <li class="chapter " data-level="1.4.2.2" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#configuration_options">
+                <a href="amalgam8-components-sidecar.html#usage">
             
                     
-                    Configuration Options
+                    Routing Requests Through the Sidecar
             
                 </a>
             
@@ -235,10 +248,10 @@
     
         <li class="chapter " data-level="1.4.2.3" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#programmable_proxy">
+                <a href="amalgam8-components-sidecar.html#runtime">
             
                     
-                    Programmable Proxy
+                    Runtime Configurations
             
                 </a>
             
@@ -301,137 +314,46 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="getting-started-with-amalgam8">Getting Started with Amalgam8</h2><p>Running your application on top of the Amalgam8 microservice platform
+                                <h1 id="getting-started-with-amalgam8">Getting Started with Amalgam8</h1><p>Running your application on top of the Amalgam8 microservice platform
 involves two main steps: (a) setting up the control plane services
-(Amalgam8 service registry and Amalgam8 controller), and (b) using the
+(Amalgam8 service registry and Amalgam8 route controller), and (b) using the
 Amalgam8 sidecar for communication between microservices instead of direct
 microservice-to-microservice communication.</p><p>The control plane setup, i.e., step (a) is needed only if you are running
 Amalgam8 locally. If Amalgam8 control plane is provided as a service, you
 need to obtain the URLs and authentication tokens for the controller and
-the registry.</p><p>The Amalgam8 sidecar is a lightweight agent that automates service
-registration and serves as an intelligent request router between
-microservices. If you are familiar with
-<a href="https://github.com/Netflix/ribbon" target="_blank">Netflix Ribbon</a>, think of the Amalgam8
-sidecar as a language-independent version of Ribbon, running in a separate
-process alongside your microservices.</p><h3 id="tldr">TL;DR</h3><ul><li><p>Start the control plane services (Amalgam8 Controller and Registry)</p><pre><code class="lang-bash">  <span class="hljs-comment">#registry</span>
-  docker run <span class="hljs-_">-d</span> amalgam8/a8-registry -auth_mode=trusted
+the registry.</p><p>The Amalgam8 sidecar enables intelligent request routing while automating
+service registration, discovery, and client-side load-balancing. The
+Amalgam8 sidecar is based on Go+Nginx and follows an architecture similar
+to
+<a href="http://techblog.netflix.com/2014/11/prana-sidecar-for-your-netflix-paas.html" target="_blank">Netflix Prana sidecar</a>
+or
+<a href="http://nerds.airbnb.com/smartstack-service-discovery-cloud/" target="_blank">AirBnB Smartstack</a>.</p><h2 id="tldr">TL;DR</h2><ul><li><p>Start the control plane services (Amalgam8 Controller and Registry)</p><pre><code class="lang-bash">  <span class="hljs-comment">#registry</span>
+  docker run <span class="hljs-_">-d</span> amalgam8/a8-registry
   <span class="hljs-comment">#controller</span>
-  docker run <span class="hljs-_">-d</span> amalgam8/a8-controller -poll_interval=5s</code></pre>
+  docker run <span class="hljs-_">-d</span> amalgam8/a8-controller</code></pre>
 </li></ul>
 <ul><li><p>Install the Amalgam8 CLI (<code>a8ctl</code>)</p><pre><code class="lang-bash">  sudo pip install git+https://github.com/amalgam8/a8ctl</code></pre>
 </li></ul>
-<ul><li><p>Create a tenant in the control plane</p><pre><code class="lang-bash">  curl -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -H <span class="hljs-string">&quot;Authorization: &lt;SECRET&gt;&quot;</span> http://&lt;controllerIP&gt;:6379/v1/tenants <span class="hljs-_">-d</span> <span class="hljs-string">&apos;
-   {
-     &quot;credentials&quot;: {
-       &quot;registry&quot;: {
-          &quot;url&quot;: &quot;http://&lt;registryIP&gt;:8080&quot;,
-          &quot;token&quot;: &quot;&lt;SECRET&gt;&quot;
-       }
-     }
-   }&apos;</span></code></pre>
+<ul><li><p>Install the sidecar in your Dockerized microservice (assuming you have
+<code>curl</code> pre-installed)</p><pre><code class="lang-Dockerfile">  <span class="hljs-keyword">RUN</span> <span class="bash">curl <span class="hljs-_">-s</span>SL https://github.com/amalgam8/amalgam8/releases/download/<span class="hljs-variable">${VERSION}</span>/a8sidecar.sh | sh</span></code></pre>
 </li></ul>
-<ul><li><p>Install the sidecar in your Dockerized microservice.</p><pre><code class="lang-Dockerfile">  <span class="hljs-keyword">RUN</span> <span class="bash">curl <span class="hljs-_">-s</span>SL https://github.com/amalgam8/sidecar/releases/download/<span class="hljs-variable">${VERSION}</span>/install<span class="hljs-_">-a</span>8sidecar.sh | sh</span></code></pre>
+<ul><li><p>Launch your app via the sidecar</p><pre><code class="lang-Dockerfile">  <span class="hljs-keyword">ENTRYPOINT</span> <span class="bash">[<span class="hljs-string">&quot;a8sidecar&quot;</span>, <span class="hljs-string">&quot;--proxy&quot;</span>, <span class="hljs-string">&quot;--register&quot;</span>, <span class="hljs-string">&quot;--supervise&quot;</span>, <span class="hljs-string">&quot;YOURAPP&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>]</span></code></pre>
+<ul><li>Inject environment variables into your container
 </li></ul>
-<ul><li><p>Launch your app via the sidecar</p><pre><code class="lang-Dockerfile">  <span class="hljs-keyword">ENTRYPOINT</span> <span class="bash">[<span class="hljs-string">&quot;a8sidecar&quot;</span>, <span class="hljs-string">&quot;--supervise&quot;</span>, <span class="hljs-string">&quot;YOURAPP&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>]</span></code></pre>
+<pre><code class="lang-bash">  A8_SERVICE=service_name:service_tags
+  A8_ENDPOINT_PORT=port_<span class="hljs-built_in">where</span>_service_is_listening
+  A8_ENDPOINT_TYPE=http|https
+  A8_REGISTRY_URL=http://a8registryURL
+  A8_CONTROLLER_URL=http://a8controllerURL</code></pre>
+<ul><li>Make API calls to other microservices via the sidecar <a href="">http://localhost:6379/serviceName/endpoint</a>
 </li></ul>
-<ul><li><p>Make API calls to other microservices via the sidecar <a href="">http://localhost:6379/serviceName/endpoint</a></p></li>
+</li>
 <li><p>Control traffic to microservices using the control plane API or the
  <a href="https://github.com/amalgam8/a8ctl" target="_blank">a8ctl</a> utility</p><pre><code class="lang-bash">  a8ctl route-set serviceName --default v1 --selector <span class="hljs-string">&apos;v2(user=&quot;Alice&quot;)&apos;</span> --selector <span class="hljs-string">&apos;v3(user=&quot;Bob&quot;)&apos;</span></code></pre>
 </li></ul>
-<h3 id="1-integrating-the-sidecar-into-your-application">1. Integrating the sidecar into your application</h3><h4 id="single-docker-container-">Single Docker container <a id="int-docker"></a></h4><p>Add the following line to your <code>Dockerfile</code> to install the sidecar in your docker container:</p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">RUN</span> <span class="bash">curl <span class="hljs-_">-s</span>SL https://github.com/amalgam8/sidecar/releases/download/<span class="hljs-variable">${VERSION}</span>/install<span class="hljs-_">-a</span>8sidecar.sh | sh</span></code></pre>
-<p>or</p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">RUN</span> <span class="bash">wget -qO- https://github.com/amalgam8/sidecar/releases/download/<span class="hljs-variable">${VERSION}</span>/install<span class="hljs-_">-a</span>8sidecar.sh | sh</span></code></pre>
-<p>where <code>${VERSION}</code> is the version of the sidecar that you wish to install.</p><p><strong>Optional app supervision:</strong> The sidecar can serve as a supervisor process that
-automatically starts up your application in addition to the Nginx proxy. To
-use the sidecar to manage your application, add the following lines to your
-<code>Dockerfile</code></p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">ENTRYPOINT</span> <span class="bash">[<span class="hljs-string">&quot;a8sidecar&quot;</span>, <span class="hljs-string">&quot;--supervise&quot;</span>, <span class="hljs-string">&quot;YOURAPP&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>]</span></code></pre>
-<p>If you wish to manage the application process by yourself, then make sure
-to launch the sidecar in the background when starting the docker
-container. The environment variables required to run the sidecar are
-described in detail <a href="#runtime">below</a>.</p><h4 id="kubernetes-pods-">Kubernetes Pods <a id="int-kube"></a></h4><p>With Kubernetes, the sidecar can be run as a standalone container in the
-same <code>Pod</code> as your application container. No changes are needed to the
-application&apos;s Dockerfile. Modify your service&apos;s YAML file to launch the
-sidecar as another container in the same pod as your application
-container. The latest version of the sidecar is available in Docker Hub in
-two formats:</p><ul><li><code>amalgam8/a8-sidecar</code> - ubuntu-based version
-</li>
-<li><code>amalgam8/a8-sidecar:alpine</code> - alpine linux based version
-</li></ul>
-<h3 id="2-starting-the-sidecar-">2. Starting the sidecar <a id="runtime"></a></h3><p>The following instructions apply to both Docker-based and Kubernetes-based
-installations. There are two modes for running the sidecar:</p><!-- #### Environment variables or CLI flags -->
-
-
-<!-- An exhaustive list of configuration options can be found in the -->
-
-
-<!-- [Configuration](#config) section. For a quick start, take a look at the -->
-
-
-<!-- [examples apps](https://github.com/amalgam8/examples) to get an idea of the -->
-
-
-<!-- required environment variables needed by Amalgam8. -->
-
-
-<h4 id="with-automatic-service-registration-only-">With automatic service registration only <a id="regonly"></a></h4><p>For leaf nodes, i.e., microservices that make no outbound calls, only
-service registration is required. Inject the following environment
-variables while launching your application container in Docker or the
-sidecar container inside kubernetes</p><pre><code class="lang-bash">A8_PROXY=<span class="hljs-literal">false</span>
-A8_REGISTER=<span class="hljs-literal">true</span>
-A8_REGISTRY_URL=http://a8registryURL
-A8_REGISTRY_TOKEN=a8registry_auth_token
-A8_SERVICE=service_name:service_version_tag
-A8_ENDPOINT_PORT=port_<span class="hljs-built_in">where</span>_service_is_listening
-A8_ENDPOINT_TYPE=http|https|tcp|udp|user</code></pre>
-<h4 id="with-automatic-service-registration-discovery--intelligent-routing-">With automatic service registration, discovery &amp; intelligent routing <a id="routing"></a></h4><p>For microservices that make outbound calls to other microservices, service
-registration, service discovery and client-side load balancing,
-version-aware routing are required.</p><pre><code class="lang-bash">A8_REGISTER=<span class="hljs-literal">true</span>
-A8_REGISTRY_URL=http://a8registryURL
-A8_REGISTRY_TOKEN=a8registry_auth_token
-A8_SERVICE=service_name:service_version_tag
-A8_ENDPOINT_PORT=port_<span class="hljs-built_in">where</span>_service_is_listening
-A8_ENDPOINT_TYPE=http|https|tcp|udp|user
-
-A8_PROXY=<span class="hljs-literal">true</span>
-A8_LOG=<span class="hljs-literal">false</span>
-A8_CONTROLLER_URL=http://a8controllerURL
-A8_TENANT_TOKEN=a8controller_auth_token
-A8_CONTROLLER_POLL=polling_interval_between_sidecar_and_controller(5s)</code></pre>
-<p><strong>Update propagation: polling vs real-time</strong>: By default, the sidecar will
-periodically poll the Amalgam8 Controller for updates on registered
-microservices, rules for routing requests to various microservices,
-etc. For real-time update propagation, the Amalgam8 has the ability to
-publish updates to a Kafka bus. If you have setup the Amalgam8 controller
-with Kafka, add the following environment variable while launching your
-microservices:</p><pre><code class="lang-bash">A8_KAFKA_BROKER=kafkahost1:kafkaport,kafkahost2:kafkaport</code></pre>
-<p>By default, Amalgam8 uses Kafka without any authentication. If you wish to
-use Kafka with SASL, refer to the <a href="#config">configuration section</a> for
-details regarding the additional environment variables needed.</p><p><strong>Request logs</strong>: All logs pertaining to external API calls made by
-the Nginx proxy will be stored in <code>/var/log/nginx/a8_access.log</code> and
-<code>/var/log/nginx/error.log</code>. The access logs are stored in JSON format. Note
-that there is <strong>no support for log rotation</strong>. If you have a monitoring and
-logging system in place, it is advisable to propagate the request logs to
-your log storage system in order to take advantage of Amalgam8 features
-like resilience testing.</p><p>The sidecar installation comes preconfigured with
-<a href="https://www.elastic.co/products/beats/filebeat" target="_blank">Filebeat</a> that can be
-configured automatically to ship the access logs to a Logstash server,
-which in turn propagates the logs to elasticsearch. If you wish to use the
-filebeat system for log processing, make sure to have Elasticsearch and
-Logstash services available in your application deployment. The following
-two environment variables enable the filebeat process:</p><pre><code class="lang-bash">A8_LOG=<span class="hljs-literal">true</span>
-A8_LOGSTASH_SERVER=<span class="hljs-string">&apos;logstash_server:port&apos;</span></code></pre>
-<p><strong>Note:</strong> The logstash environment variable needs to be enclosed in single quotes.</p><h3 id="3-using-the-sidecar">3. Using the sidecar</h3><p>The sidecar is independent of your application process. The communication
-model between a microservice, its sidecar and the target microservice is
-shown below:</p><p><img alt="Communication between app and sidecar" src="figures/amalgam8-sidecar-communication-model.svg"></p><p>When you want to make API calls to other microservices from your
-application, you should call the sidecar at localhost:6379. 
-The format of the API call is
-<a href="">http://localhost:6379/serviceName/endpoint</a></p><p>where the <code>serviceName</code> is the service name that was used when launching
-the target microservice (the <code>A8_SERVICE</code> environment variable), and the
-endpoint is the API endpoint exposed by the target microservice.</p><p>For example, to invoke the <code>getItem</code> API in the <code>catalog</code> microservice,
-your microservice would simply invoke the API via the URL:
-<a href="">http://localhost:6379/catalog/getItem?id=123</a>.</p><p>Note that service versions are not part of the URL. The choice of the
-service version (e.g., catalog:v1, catalog:v2, etc.), will be done
-dynamically by the sidecar, based on routing rules set by the Amalgam8
-controller.</p>
+<p>For detailed instructions on how to integrate your application with the
+sidecar, please refer to the
+<a href="amalgam8-components-sidecar.html">sidecar documentation</a></p>
                                 
                                 </section>
                             
@@ -474,7 +396,7 @@ controller.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Getting Started with Amalgam8","level":"1.3","depth":1,"next":{"title":"Amalgam8 Architecture","level":"1.4","depth":1,"path":"content/amalgam8-architecture.md","ref":"content/amalgam8-architecture.md","articles":[{"title":"Amalgam8 Registry","level":"1.4.1","depth":2,"anchor":"#registry-root","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#registry-root","articles":[{"title":"Interoperability","level":"1.4.1.1","depth":3,"anchor":"#interoperability","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#interoperability","articles":[{"title":"Kubernetes-Registry Adapter","level":"1.4.1.1.1","depth":4,"anchor":"#k8s_adapter","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#k8s_adapter","articles":[]}]}]},{"title":"Amalgam8 Sidecar","level":"1.4.2","depth":2,"anchor":"#sidecar-root","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#sidecar-root","articles":[{"title":"Deployment Options","level":"1.4.2.1","depth":3,"anchor":"#deployment_options","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#deployment_options","articles":[]},{"title":"Configuration Options","level":"1.4.2.2","depth":3,"anchor":"#configuration_options","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#configuration_options","articles":[]},{"title":"Programmable Proxy","level":"1.4.2.3","depth":3,"anchor":"#programmable_proxy","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#programmable_proxy","articles":[]}]}]},"previous":{"title":"What is Amalgam8","level":"1.2","depth":1,"path":"content/what-is-amalgam8.md","ref":"content/what-is-amalgam8.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/getting-started-with-amalgam8.md","mtime":"2016-07-25T23:46:41.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-07-25T23:47:56.810Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Getting Started with Amalgam8","level":"1.3","depth":1,"next":{"title":"Amalgam8 Architecture","level":"1.4","depth":1,"path":"content/amalgam8-architecture.md","ref":"content/amalgam8-architecture.md","articles":[{"title":"Amalgam8 Registry","level":"1.4.1","depth":2,"anchor":"#registry-root","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#registry-root","articles":[{"title":"Interoperability","level":"1.4.1.1","depth":3,"anchor":"#interoperability","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#interoperability","articles":[{"title":"Kubernetes-Registry Adapter","level":"1.4.1.1.1","depth":4,"anchor":"#k8s_adapter","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#k8s_adapter","articles":[]},{"title":"Drop-in Replacement for Eureka","level":"1.4.1.1.2","depth":4,"anchor":"#eureka","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#eureka","articles":[]}]}]},{"title":"Amalgam8 Sidecar","level":"1.4.2","depth":2,"anchor":"#sidecar-root","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#sidecar-root","articles":[{"title":"Deployment Options","level":"1.4.2.1","depth":3,"anchor":"#deployment_options","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#deployment_options","articles":[]},{"title":"Routing Requests Through the Sidecar","level":"1.4.2.2","depth":3,"anchor":"#usage","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#usage","articles":[]},{"title":"Runtime Configurations","level":"1.4.2.3","depth":3,"anchor":"#runtime","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#runtime","articles":[]}]}]},"previous":{"title":"What is Amalgam8","level":"1.2","depth":1,"path":"content/what-is-amalgam8.md","ref":"content/what-is-amalgam8.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/getting-started-with-amalgam8.md","mtime":"2016-09-14T22:21:36.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-14T22:40:51.590Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

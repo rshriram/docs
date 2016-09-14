@@ -183,6 +183,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.1.1.2" data-path="amalgam8-components-registry.html">
+            
+                <a href="amalgam8-components-registry.html#eureka">
+            
+                    
+                    Drop-in Replacement for Eureka
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -222,10 +235,10 @@
     
         <li class="chapter " data-level="1.4.2.2" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#configuration_options">
+                <a href="amalgam8-components-sidecar.html#usage">
             
                     
-                    Configuration Options
+                    Routing Requests Through the Sidecar
             
                 </a>
             
@@ -235,10 +248,10 @@
     
         <li class="chapter " data-level="1.4.2.3" data-path="amalgam8-components-sidecar.html">
             
-                <a href="amalgam8-components-sidecar.html#programmable_proxy">
+                <a href="amalgam8-components-sidecar.html#runtime">
             
                     
-                    Programmable Proxy
+                    Runtime Configurations
             
                 </a>
             
@@ -301,7 +314,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="amalgam8-sidecar-">Amalgam8 Sidecar <a id="sidecar-root"></a></h2><p>The Almagam8 sidecar has a flexible architecture that can be configured and
+                                <h1 id="amalgam8-sidecar-">Amalgam8 Sidecar <a id="sidecar-root"></a></h1><p>The Almagam8 sidecar has a flexible architecture that can be configured and
 used by applications in a number of ways. The sidecar can be split into the
 following functional components:</p><p><img alt="sidecar architecture" src="figures/amalgam8-sidecar-components.svg"></p><ul><li><strong>Service Registration</strong> - Registers a microservice instance in the Registry and sends periodic heartbeats.
 </li>
@@ -311,61 +324,237 @@ following functional components:</p><p><img alt="sidecar architecture" src="figu
 </li>
 <li><strong>Proxy</strong> - An <a href="https://openresty.org/en/" target="_blank">OpenResty-based Nginx</a> server  that acts as a request forwarder and load-balancer.
 </li></ul>
-<h3 id="deployment-options-">Deployment Options <a id="deployment_options"></a></h3><p>There are two deployment options for the
-sidecar. One option is to run it as <em>a separate process in the same
-container alongside the application</em>. This usage model applies to any
+<h2 id="deployment-options-">Deployment Options <a id="deployment_options"></a></h2><p>There are two deployment options for the sidecar.</p><p><strong>A separate process in same container.</strong> This usage model applies to any
 container-based environment and requires that the sidecar binaries be
-bundled along with the application in the same Docker image. Amalgam8
-provides convenient Docker images packaged with the sidecar, that can be
-used as microservice application base images. The sidecar binary can also
-be built and installed individually or be distributed as installation
-packages (e.g., deb, rpm, etc.).</p><p>Another option, specific to Kubernetes, is to run a sidecar container per
-pod. Each pod would have the microservice running in one container and the
-sidecar in another. In both deployment options outlined above, the
-application would access the sidecar in the same manner, namely:
-<a href="http://localhost:6379/servicefoo/foobarapi" target="_blank">http://localhost:6379/servicefoo/foobarapi</a></p><h3 id="configuration-options-">Configuration Options <a id="configuration_options"></a></h3><p>Depending on the nature of the microservice, only some
-or all of the components of the sidecar may be needed. As shown in the
-figure below, a microservice that requires service registration, makes
-outbound calls to other microservices, and requires app supervision might
-use all of the components of the sidecar. On the other hand, a leaf
-microservice that does not make any outbound calls requires only the
-service registration component of the sidecar (b). In Kubernetes, the
-sidecar would typically be deployed as a separate container without the app
-(a). Service Registration would not be needed for services in a runtime
-that supports auto registration (c), for example, when using the amalgam8
-registry adapter for Kubernetes.  The sidecar provides various
-<a href="https://github.com/amalgam8/sidecar" target="_blank">command line flags</a> to disable
-components that are not needed.</p><p><img alt="sidecar containers" src="figures/amalgam8-sidecar-configurations.svg"></p><h3 id="programmable-proxy-">Programmable Proxy <a id="programmable_proxy"></a></h3><p>All calls to Amalgam8 microservices are routed via the Proxy component in
-the sidecar. The Proxy enables the Amalgam8 Controller to manage traffic
-between all the microservices in the application. Typically, the Proxy
-component is deployed in the sidecar configuration, thus serving as a
-decentralized client-side load-balancer. There are two exceptions that
-should be noted:</p><ul><li>If the application owner wishes to use the DevOps functions for
-user-facing microservices, an instance of the sidecar with just the Proxy
-component needs to be deployed as an API gateway, in front of the
-user-facing microservices.
+bundled along with the application in the same Docker image. Amalgam8 repo
+on Docker Hub has Docker images for Alpine linux and Ubuntu, that are
+pre-packaged with the sidecar. These images can be used as microservice
+application base images. Binary tarballs are also available at the
+<a href="https://github.com/amalgam8/amalgam8/releases" target="_blank">Amalgam8 releases</a> page on
+GitHub. To use the binary tarballs, add the following line to your
+Dockerfile:</p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">RUN</span> <span class="bash">curl <span class="hljs-_">-s</span>SL https://github.com/amalgam8/amalgam8/releases/download/<span class="hljs-variable">${VERSION}</span>/a8sidecar.sh | sh</span></code></pre>
+<p>If you are using <code>wget</code></p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">RUN</span> <span class="bash">wget -qO- https://github.com/amalgam8/amalgam8/releases/download/<span class="hljs-variable">${VERSION}</span>/a8sidecar.sh | sh</span></code></pre>
+<p>Replace ${VERSION} with the specific version of Amalgam8 you would
+like. The set of releases are available
+<a href="https://github.com/amalgam8/amalgam8/releases" target="_blank">here</a>.</p><p><strong>A separate container in same pod.</strong> This usage model is specific to
+Kubernetes. Each pod would have the microservice running in one container
+and the sidecar in another.  No changes are needed to the
+application&apos;s Dockerfile. Modify your service&apos;s YAML file to launch the
+sidecar as another container in the same pod as your application
+container. The latest version of the sidecar is available in Docker Hub in
+two formats:</p><ul><li><code>amalgam8/a8-sidecar</code> - ubuntu-based version
 </li>
-<li>By routing API calls to third-party services such as social media, maps,
-etc., via the Proxy component, it is possible to leverage DevOps functions 
-such as failure-recovery testing between the microservice and third-party
-dependencies.
+<li><code>amalgam8/a8-sidecar:alpine</code> - alpine linux based version
 </li></ul>
-<p>The Amalgam8 Proxy implementation uses <a href="https://nginx.org/en/" target="_blank">Nginx</a> with
-the <a href="https://openresty.org/en/" target="_blank">OpenResty/Lua</a> extension as the Proxy
-engine as shown in the following diagram:</p><p><img alt="amalgam8 proxy" src="figures/amalgam8-sidecar-routing.svg"></p><p>The Route Management component of the sidecar process queries the Amalgam8
-Controller, in the control plane, to obtain the routing and configuration
-information for the Nginx servers. The sidecar updates Nginx via REST API
-exposed by the Lua-based management layer in the Nginx proxy.</p><p>At the Nginx layer, incoming requests are passed on to the the appropriate
-Lua functions, which will route the request to an appropriate service, or
-version of a service, and then load balance to an appropriate instance.</p><p>A point worth highlighting is that although Amalgam8 includes convenient
-sidecar container images with built-in implementations of some of the most
-common proxy control features, the design is open and intended to allow
-applications to extend the behavior by introducing their own custom routing
-rules and control logic.  Specific rules provided to the Amalgam8
-Controller can be considered opaque and will essentially be passed though
-to the proxys that are intended to act on them. So, by simply extending the
-sidecar implementation to include matching Lua implementation code, custom
-rules can be specified and the system will behave as expected.</p>
+<h3 id="launching-the-sidecar-in-docker-">Launching the Sidecar in Docker <a id="docker_launch"></a></h3><p>This section is applicable only when you are running the sidecar as a
+separate process in the same container as the application. There are two
+ways to launch the sidecar process in the Docker container:</p><p><em>With App Supervision</em>: The sidecar can serve as a supervisor process that
+automatically starts up your application. When the application dies, the
+sidecar exits with the same exit code as the application, causing the
+container to terminate as well.</p><p>To use the sidecar to manage your application, add the following lines to
+your <code>Dockerfile</code></p><pre><code class="lang-Dockerfile"><span class="hljs-keyword">ENTRYPOINT</span> <span class="bash">[<span class="hljs-string">&quot;a8sidecar&quot;</span>, <span class="hljs-string">&quot;--proxy&quot;</span>, <span class="hljs-string">&quot;--register&quot;</span>, <span class="hljs-string">&quot;--supervise&quot;</span>, <span class="hljs-string">&quot;YOURAPP&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>, <span class="hljs-string">&quot;YOURAPP_ARG&quot;</span>]</span></code></pre>
+<p><em>Without App Supervision</em>: If you wish to manage the application process by
+yourself, then make sure to launch the sidecar in the background when
+starting the docker container. The environment variables required to run
+the sidecar are described in detail <a href="#runtime">below</a>.</p><h2 id="making-api-calls-through-the-sidecar-">Making API calls through the Sidecar <a id="usage"></a></h2><p>The communication model between a microservice, its sidecar (irrespective
+of the deployment model) and the target microservice is shown below:</p><p><img alt="Communication between app and sidecar" src="figures/amalgam8-sidecar-communication-model.svg"></p><p>When you want to make API calls to other microservices from your
+application, you should call the sidecar at localhost:6379.  The format of
+the API call is <a href="">http://localhost:6379/serviceName/endpoint</a></p><p>where the <code>serviceName</code> is the service name that was used when launching
+the target microservice (the <code>A8_SERVICE</code> environment variable), and the
+endpoint is the API endpoint exposed by the target microservice.</p><p>For example, to invoke the <code>getItem</code> API in the <code>catalog</code> microservice,
+your microservice would simply invoke the API via the URL:
+<a href="">http://localhost:6379/catalog/getItem?id=123</a>.</p><p>Note that service versions are not part of the URL. The choice of the
+service version (e.g., catalog:v1, catalog:v2, etc.), will be done
+dynamically by the sidecar, based on routing rules set by the Amalgam8
+controller.</p><p><strong>Note</strong>: You can enable HTTPS between microservices by customizing the
+Nginx config files in <code>/etc/nginx/amalgam8-services.conf</code>. For more
+information on setting up HTTPS with Nginx, please refer to the official
+<a href="https://www.nginx.com/resources/admin-guide/nginx-https-upstreams/" target="_blank">Nginx guide</a></p><h2 id="runtime-configurations-for-the-sidecar-">Runtime Configurations for the Sidecar <a id="runtime"></a></h2><p>The following instructions apply to both Docker-based and Kubernetes-based
+installations. Configuration options can be set via environment variables,
+command line flags, or YAML configuration files.  <em>Order of precedence is
+command line flags first, then environmenmt variables, configuration files,
+and lastly default values.</em></p><p>The following table lists all the configuration options, their equivalent
+environment variable name, the command line switch and the field in the
+YAML file.</p><table>
+<thead>
+<tr><th> Environment Variable </th>
+<th> Flag Name </th>
+<th> YAML Key </th>
+<th> Description </th>
+<th> Default Value </th>
+<th> Required </th>
+</tr></thead><tbody>
+<tr><td style="text-align:left"> A8_CONFIG </td>
+<td style="text-align:left"> --config </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> Path to a file to load configuration from </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_LOG_LEVEL </td>
+<td style="text-align:left"> --log_level </td>
+<td style="text-align:left"> log_level </td>
+<td style="text-align:left"> Logging level (debug, info, warn, error, fatal, panic) </td>
+<td style="text-align:left"> info </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_SERVICE </td>
+<td style="text-align:left"> --service </td>
+<td style="text-align:left"> service.name &amp; service.tags </td>
+<td style="text-align:left"> service name to register with, optionally followed by a colon and a comma-separated list of tags </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes </td>
+</tr><tr><td style="text-align:left"> A8_ENDPOINT_HOST </td>
+<td style="text-align:left"> --endpoint_host </td>
+<td style="text-align:left"> endpoint.host </td>
+<td style="text-align:left"> service endpoint IP or hostname. Defaults to the IP (e.g., container) where the sidecar is running </td>
+<td style="text-align:left"> optional </td>
+</tr><tr><td style="text-align:left"> A8_ENDPOINT_PORT </td>
+<td style="text-align:left"> --endpoint_port </td>
+<td style="text-align:left"> endpoint.port </td>
+<td style="text-align:left"> service endpoint port </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes </td>
+</tr><tr><td style="text-align:left"> A8_ENDPOINT_TYPE </td>
+<td style="text-align:left"> --endpoint_type </td>
+<td style="text-align:left"> endpoint.type </td>
+<td style="text-align:left"> service endpoint type (http, https, udp, tcp, user) </td>
+<td style="text-align:left"> http </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_REGISTER </td>
+<td style="text-align:left"> --register </td>
+<td style="text-align:left"> register </td>
+<td style="text-align:left"> enable automatic service registration and heartbeat </td>
+<td style="text-align:left"> false </td>
+<td style="text-align:left"> See note above </td>
+</tr><tr><td style="text-align:left"> A8_PROXY </td>
+<td style="text-align:left"> --proxy </td>
+<td style="text-align:left"> proxy </td>
+<td style="text-align:left"> enable automatic service discovery and load balancing across services using NGINX </td>
+<td style="text-align:left"> false </td>
+<td style="text-align:left"> See note above </td>
+</tr><tr><td style="text-align:left"> A8_LOG </td>
+<td style="text-align:left"> --log </td>
+<td style="text-align:left"> log </td>
+<td style="text-align:left"> enable logging of outgoing requests through proxy using FileBeat </td>
+<td style="text-align:left"> false </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_SUPERVISE </td>
+<td style="text-align:left"> --supervise </td>
+<td style="text-align:left"> supervise </td>
+<td style="text-align:left"> Manage application process. If application dies, sidecar process is killed as well. All arguments provided after the flags will be considered as part of the application invocation </td>
+<td style="text-align:left"> false </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_REGISTRY_URL </td>
+<td style="text-align:left"> --registry_url </td>
+<td style="text-align:left"> registry.url </td>
+<td style="text-align:left"> registry URL </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes if <code>-register</code> is enabled </td>
+</tr><tr><td style="text-align:left"> A8_REGISTRY_TOKEN </td>
+<td style="text-align:left"> --registry_token </td>
+<td style="text-align:left"> registry.token </td>
+<td style="text-align:left"> registry auth token </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes if <code>-register</code> is enabled and an auth mode is set </td>
+</tr><tr><td style="text-align:left"> A8_REGISTRY_POLL </td>
+<td style="text-align:left"> --registry_poll </td>
+<td style="text-align:left"> registry.poll </td>
+<td style="text-align:left"> interval for polling Registry </td>
+<td style="text-align:left"> 15s </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_CONTROLLER_URL </td>
+<td style="text-align:left"> --controller_url </td>
+<td style="text-align:left"> controller.url </td>
+<td style="text-align:left"> controller URL </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes if <code>-proxy</code> is enabled </td>
+</tr><tr><td style="text-align:left"> A8_CONTROLLER_TOKEN </td>
+<td style="text-align:left"> --controller_token </td>
+<td style="text-align:left"> controller.token </td>
+<td style="text-align:left"> Auth token for Controller instance </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes if <code>-proxy</code> is enabled and an auth mode is set </td>
+</tr><tr><td style="text-align:left"> A8_CONTROLLER_POLL </td>
+<td style="text-align:left"> --controller_poll </td>
+<td style="text-align:left"> controller.poll </td>
+<td style="text-align:left"> interval for polling Controller </td>
+<td style="text-align:left"> 15s </td>
+<td style="text-align:left"> no </td>
+</tr><tr><td style="text-align:left"> A8_LOGSTASH_SERVER </td>
+<td style="text-align:left"> --logstash_server </td>
+<td style="text-align:left"> logstash_server </td>
+<td style="text-align:left"> logstash target for nginx logs </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left"> yes if <code>-log</code> is enabled </td>
+</tr><tr><td style="text-align:left">  </td>
+<td style="text-align:left"> --help, -h </td>
+<td style="text-align:left"> show help </td>
+<td style="text-align:left">  </td>
+<td style="text-align:left">  </td>
+</tr><tr><td style="text-align:left">  </td>
+<td style="text-align:left"> --version, -v </td>
+<td style="text-align:left"> print the version </td>
+</tr></tbody></table>
+
+<h3 id="example-configuration-file">Example configuration file</h3><pre><code class="lang-yaml"><span class="hljs-attr">register:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">proxy:</span> <span class="hljs-literal">true</span>
+
+<span class="hljs-attr">service:</span>
+<span class="hljs-attr">  name:</span> helloworld
+<span class="hljs-attr">  tags:</span> 
+<span class="hljs-bullet">    -</span> v1
+<span class="hljs-bullet">    -</span> somethingelse
+
+<span class="hljs-attr">endpoint:</span>
+<span class="hljs-attr">  host:</span> <span class="hljs-number">172.10</span><span class="hljs-number">.10</span><span class="hljs-number">.1</span>
+<span class="hljs-attr">  port:</span> <span class="hljs-number">9080</span>
+<span class="hljs-attr">  type:</span> https
+
+<span class="hljs-attr">registry:</span>
+<span class="hljs-attr">  url:</span>   http://registry:<span class="hljs-number">8080</span>
+<span class="hljs-attr">  token:</span> abcdef
+<span class="hljs-attr">  poll:</span>  <span class="hljs-number">10</span>s
+
+<span class="hljs-attr">controller:</span>
+<span class="hljs-attr">  url:</span>   http://controller:<span class="hljs-number">8080</span>
+<span class="hljs-attr">  token:</span> abcdef
+<span class="hljs-attr">  poll:</span>  <span class="hljs-number">30</span>s
+
+<span class="hljs-attr">supervise:</span> <span class="hljs-literal">true</span>
+<span class="hljs-attr">app:</span> [ <span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;helloworld.py ]
+
+log: true
+logstash_server: logstash:8092
+
+log_level: debug</span></code></pre>
+<h3 id="configurations-options">Configurations Options</h3><p><strong>Automatic service registration:</strong> Registration and heartbeat with the
+Amalgam8 service registry can be enabled by setting the following
+environment variables or setting the equivalent fields in the config file:</p><pre><code class="lang-bash">A8_REGISTER=<span class="hljs-literal">true</span>
+A8_REGISTRY_URL=http://a8registryURL
+A8_SERVICE=service_name:service_version_tag
+A8_ENDPOINT_PORT=port_<span class="hljs-built_in">where</span>_service_is_listening
+A8_ENDPOINT_TYPE=http|https|tcp|udp|user</code></pre>
+<p><strong>Intelligent Request Routing:</strong> For microservices that make outbound calls
+to other microservices, service discovery and client-side load balancing,
+version and content-based routing can be enabled by the following options:</p><pre><code class="lang-bash">A8_PROXY=<span class="hljs-literal">true</span>
+A8_CONTROLLER_URL=http://a8controllerURL</code></pre>
+<p><strong>Logging:</strong> All logs pertaining to external API calls made by the Nginx
+proxy will be stored in <code>/var/log/nginx/a8_access.log</code> and
+<code>/var/log/nginx/error.log</code>. The access logs are stored in JSON format. Note
+that there is <strong>no support for log rotation</strong>. If you have a monitoring and
+logging system in place, it is advisable to propagate the request logs to
+your log storage system in order to take advantage of Amalgam8 features
+like resilience testing.</p><p>The sidecar installation comes preconfigured with
+<a href="https://www.elastic.co/products/beats/filebeat" target="_blank">Filebeat</a> that can be
+configured automatically to ship the Nginx access logs to a Logstash
+server, which in turn propagates the logs to elasticsearch. If you wish to
+use the filebeat system for log processing, make sure to have Elasticsearch
+and Logstash services available in your application deployment. The
+following two environment variables enable the filebeat process:</p><pre><code class="lang-bash">A8_LOG=<span class="hljs-literal">true</span>
+A8_LOGSTASH_SERVER=<span class="hljs-string">&apos;logstash_server:port&apos;</span></code></pre>
+<p><strong>Note 1:</strong> The logstash environment variable needs to be enclosed in single
+quotes.</p><p><strong>Note 2:</strong> You can omit the logstash server details if you override the
+<code>filebeat.yml</code> file to log directly to Elasticsearch. The <code>filebeat.yml</code>
+file can be found in <code>/etc/filebeat/filebeat.yml</code>.</p>
                                 
                                 </section>
                             
@@ -392,7 +581,7 @@ rules can be specified and the system will behave as expected.</p>
 
             
                 
-                <a href="amalgam8-components-registry.html#k8s_adapter" class="navigation navigation-prev " aria-label="Previous page: Kubernetes-Registry Adapter">
+                <a href="amalgam8-components-registry.html#eureka" class="navigation navigation-prev " aria-label="Previous page: Drop-in Replacement for Eureka">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -408,7 +597,7 @@ rules can be specified and the system will behave as expected.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Amalgam8 Sidecar","level":"1.4.2","depth":2,"next":{"title":"Deployment Options","level":"1.4.2.1","depth":3,"anchor":"#deployment_options","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#deployment_options","articles":[]},"previous":{"title":"Kubernetes-Registry Adapter","level":"1.4.1.1.1","depth":4,"anchor":"#k8s_adapter","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#k8s_adapter","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/amalgam8-components-sidecar.md","mtime":"2016-07-12T02:47:43.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-07-25T23:47:56.810Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Amalgam8 Sidecar","level":"1.4.2","depth":2,"next":{"title":"Deployment Options","level":"1.4.2.1","depth":3,"anchor":"#deployment_options","path":"content/amalgam8-components-sidecar.md","ref":"content/amalgam8-components-sidecar.md#deployment_options","articles":[]},"previous":{"title":"Drop-in Replacement for Eureka","level":"1.4.1.1.2","depth":4,"anchor":"#eureka","path":"content/amalgam8-components-registry.md","ref":"content/amalgam8-components-registry.md#eureka","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"content/amalgam8-components-sidecar.md","mtime":"2016-09-14T22:28:54.000Z","type":"markdown"},"gitbook":{"version":"3.2.0","time":"2016-09-14T22:40:51.590Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
